@@ -11,7 +11,9 @@ import { CurrentPriceForm } from "@/components/investments/current-price-form";
 import { AddTransactionSection } from "@/components/investments/add-transaction-section";
 import { TransactionList, type TransactionRow } from "@/components/investments/transaction-list";
 import { DeleteAssetButton } from "@/components/investments/delete-asset-button";
-import { ASSET_TYPE_LABELS } from "@/components/investments/asset-type-labels";
+import { getAssetTypeLabels } from "@/components/investments/asset-type-labels";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export default async function AssetDetailPage({
   params,
@@ -20,6 +22,8 @@ export default async function AssetDetailPage({
 }) {
   const { assetId } = await params;
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
+  const ASSET_TYPE_LABELS = getAssetTypeLabels(t.investments);
 
   const asset = await prisma.asset.findFirst({
     where: { id: assetId, userId: user.id },
@@ -40,26 +44,26 @@ export default async function AssetDetailPage({
   });
 
   const performance = computeAssetPerformance(
-    asset.transactions.map((t) => ({
-      type: t.type,
-      date: t.date,
-      quantity: Number(t.quantity),
-      pricePerUnit: Number(t.pricePerUnit),
-      totalAmount: Number(t.totalAmount),
+    asset.transactions.map((tx) => ({
+      type: tx.type,
+      date: tx.date,
+      quantity: Number(tx.quantity),
+      pricePerUnit: Number(tx.pricePerUnit),
+      totalAmount: Number(tx.totalAmount),
     })),
     asset.currentPricePerUnit != null ? Number(asset.currentPricePerUnit) : null,
   );
 
-  const transactionRows: TransactionRow[] = asset.transactions.map((t) => ({
-    id: t.id,
-    date: t.date.toISOString().slice(0, 10),
-    type: t.type,
-    brokerId: t.brokerId,
-    brokerName: t.broker.name,
-    quantity: Number(t.quantity),
-    pricePerUnit: Number(t.pricePerUnit),
-    totalAmount: Number(t.totalAmount),
-    notes: t.notes,
+  const transactionRows: TransactionRow[] = asset.transactions.map((tx) => ({
+    id: tx.id,
+    date: tx.date.toISOString().slice(0, 10),
+    type: tx.type,
+    brokerId: tx.brokerId,
+    brokerName: tx.broker.name,
+    quantity: Number(tx.quantity),
+    pricePerUnit: Number(tx.pricePerUnit),
+    totalAmount: Number(tx.totalAmount),
+    notes: tx.notes,
   }));
 
   const gainClass =
@@ -77,20 +81,21 @@ export default async function AssetDetailPage({
           className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to investments
+          {t.investments.backToInvestments}
         </Link>
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <h1 className="text-2xl font-semibold">{asset.name}</h1>
             <p className="text-sm text-muted-foreground">
-              {ASSET_TYPE_LABELS[asset.type]} · {asset.currency} · {performance.quantityHeld} held
+              {ASSET_TYPE_LABELS[asset.type]} · {asset.currency} · {performance.quantityHeld}{" "}
+              {t.investments.assetDetail.held}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Link href={`/investments/${asset.id}/edit`}>
               <Button variant="outline">
                 <Pencil className="h-4 w-4" />
-                Edit
+                {t.investments.assetDetail.edit}
               </Button>
             </Link>
             <DeleteAssetButton assetId={asset.id} assetName={asset.name} />
@@ -101,7 +106,7 @@ export default async function AssetDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Current price</CardTitle>
+          <CardTitle>{t.investments.assetDetail.currentPriceTitle}</CardTitle>
         </CardHeader>
         <CardContent>
           <CurrentPriceForm
@@ -117,26 +122,29 @@ export default async function AssetDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Performance</CardTitle>
+          <CardTitle>{t.investments.assetDetail.performanceTitle}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Stat label="Invested (cost basis)" value={formatCurrency(performance.costBasisRemaining, asset.currency)} />
             <Stat
-              label="Current value"
+              label={t.investments.assetDetail.investedCostBasis}
+              value={formatCurrency(performance.costBasisRemaining, asset.currency)}
+            />
+            <Stat
+              label={t.investments.assetDetail.currentValue}
               value={
                 performance.currentValue != null
                   ? formatCurrency(performance.currentValue, asset.currency)
-                  : "Set a current price to see performance"
+                  : t.investments.assetDetail.setPriceToSeePerformance
               }
             />
             <Stat
-              label="Realized gain"
+              label={t.investments.assetDetail.realizedGain}
               value={formatCurrency(performance.realizedGain, asset.currency)}
               valueClassName={performance.realizedGain >= 0 ? "text-success" : "text-destructive"}
             />
             <Stat
-              label="Unrealized gain"
+              label={t.investments.assetDetail.unrealizedGain}
               value={
                 performance.unrealizedGain != null
                   ? formatCurrency(performance.unrealizedGain, asset.currency)
@@ -151,7 +159,7 @@ export default async function AssetDetailPage({
               }
             />
             <Stat
-              label="Total gain"
+              label={t.investments.assetDetail.totalGain}
               value={
                 performance.totalGain != null
                   ? formatCurrency(performance.totalGain, asset.currency)
@@ -160,14 +168,14 @@ export default async function AssetDetailPage({
               valueClassName={gainClass}
             />
             <Stat
-              label="Total return"
+              label={t.investments.assetDetail.totalReturn}
               value={
                 performance.simpleReturnPct != null ? formatPercent(performance.simpleReturnPct) : "—"
               }
               valueClassName={gainClass}
             />
             <Stat
-              label="Annualized return"
+              label={t.investments.assetDetail.annualizedReturn}
               value={
                 performance.annualizedReturnPct != null
                   ? formatPercent(performance.annualizedReturnPct)
@@ -181,7 +189,7 @@ export default async function AssetDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Transactions</CardTitle>
+          <CardTitle>{t.investments.assetDetail.transactionsTitle}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <AddTransactionSection assetId={asset.id} currency={asset.currency} brokers={brokers} />

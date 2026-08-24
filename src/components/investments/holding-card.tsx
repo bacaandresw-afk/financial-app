@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ASSET_TYPES } from "@/lib/validations";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { ASSET_TYPE_LABELS } from "./asset-type-labels";
+import { getAssetTypeLabels } from "./asset-type-labels";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export type HoldingCardData = {
   id: string;
@@ -15,7 +16,14 @@ export type HoldingCardData = {
   annualizedReturnPct: number | null;
 };
 
-export function HoldingCard({ holding }: { holding: HoldingCardData }) {
+export function HoldingCard({
+  holding,
+  t,
+}: {
+  holding: HoldingCardData;
+  t: Dictionary["investments"];
+}) {
+  const ASSET_TYPE_LABELS = getAssetTypeLabels(t);
   const gainClass =
     holding.totalGain == null
       ? "text-muted-foreground"
@@ -32,7 +40,8 @@ export function HoldingCard({ holding }: { holding: HoldingCardData }) {
         <div>
           <p className="font-medium">{holding.name}</p>
           <p className="text-xs text-muted-foreground">
-            {ASSET_TYPE_LABELS[holding.type]} · {holding.currency} · {holding.quantityHeld} held
+            {ASSET_TYPE_LABELS[holding.type]} · {holding.currency} · {holding.quantityHeld}{" "}
+            {t.holdingCard.held}
           </p>
         </div>
         <div className="text-right">
@@ -42,19 +51,21 @@ export function HoldingCard({ holding }: { holding: HoldingCardData }) {
               : "—"}
           </p>
           <p className={`text-xs ${gainClass}`}>
-            {holding.totalGain != null ? formatCurrency(holding.totalGain, holding.currency) : "Set a current price"}
+            {holding.totalGain != null
+              ? formatCurrency(holding.totalGain, holding.currency)
+              : t.holdingCard.setPrice}
           </p>
         </div>
       </div>
       <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
         <span>
-          Total return:{" "}
+          {t.holdingCard.totalReturn}:{" "}
           <span className={gainClass}>
             {holding.simpleReturnPct != null ? formatPercent(holding.simpleReturnPct) : "—"}
           </span>
         </span>
         <span>
-          Annualized:{" "}
+          {t.holdingCard.annualized}:{" "}
           <span className={gainClass}>
             {holding.annualizedReturnPct != null
               ? formatPercent(holding.annualizedReturnPct)

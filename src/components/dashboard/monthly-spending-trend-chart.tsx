@@ -2,6 +2,7 @@
 
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/language-context";
 import { DESTRUCTIVE_COLOR } from "./colors";
 
 export function MonthlySpendingTrendChart({
@@ -11,6 +12,8 @@ export function MonthlySpendingTrendChart({
   data: { label: string; expense: number }[];
   currency: string;
 }) {
+  const { t } = useTranslation();
+
   return (
     <ResponsiveContainer width="100%" height={260}>
       <LineChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
@@ -21,7 +24,7 @@ export function MonthlySpendingTrendChart({
         <Line
           type="monotone"
           dataKey="expense"
-          name="Expenses"
+          name={t.dashboard.monthlySpendingChart.expenses}
           stroke={DESTRUCTIVE_COLOR}
           strokeWidth={2}
           dot={{ r: 3 }}

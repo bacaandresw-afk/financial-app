@@ -1,0 +1,17 @@
+export const auth = {
+  welcomeBack: "Welcome back",
+  signInSubtitle: "Sign in to your account",
+  email: "Email",
+  password: "Password",
+  signIn: "Sign in",
+  signingIn: "Signing in…",
+  noAccount: "No account yet?",
+  createOne: "Create one",
+  createAccountTitle: "Create your account",
+  createAccountSubtitle: "Start tracking your finances",
+  name: "Name",
+  passwordHint: "At least 8 characters",
+  createAccount: "Create account",
+  creatingAccount: "Creating account…",
+  alreadyHaveAccount: "Already have an account?",
+};

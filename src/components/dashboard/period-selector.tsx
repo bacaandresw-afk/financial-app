@@ -3,7 +3,7 @@
 import type { ChangeEvent } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Select, Input, Label } from "@/components/ui/input";
-import { PERIOD_LABELS } from "@/lib/date-range";
+import { useTranslation } from "@/lib/i18n/language-context";
 import type { Period } from "@/lib/validations";
 
 const PERIOD_OPTIONS: Period[] = [
@@ -27,6 +27,7 @@ export function PeriodSelector({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   function updateParams(next: Record<string, string | undefined>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -50,12 +51,12 @@ export function PeriodSelector({
     <div className="flex flex-wrap items-end gap-3">
       <div>
         <Label htmlFor="period-select" className="sr-only">
-          Period
+          {t.dashboard.periodSelector.periodLabel}
         </Label>
         <Select id="period-select" value={period} onChange={handlePeriodChange} className="w-auto">
           {PERIOD_OPTIONS.map((p) => (
             <option key={p} value={p}>
-              {PERIOD_LABELS[p]}
+              {t.common.periods[p]}
             </option>
           ))}
         </Select>
@@ -64,7 +65,7 @@ export function PeriodSelector({
         <>
           <div>
             <Label htmlFor="from-date" className="sr-only">
-              From
+              {t.dashboard.periodSelector.fromLabel}
             </Label>
             <Input
               id="from-date"
@@ -76,7 +77,7 @@ export function PeriodSelector({
           </div>
           <div>
             <Label htmlFor="to-date" className="sr-only">
-              To
+              {t.dashboard.periodSelector.toLabel}
             </Label>
             <Input
               id="to-date"

@@ -4,6 +4,7 @@ import { useActionState, useRef, useEffect } from "react";
 import { createExpenseCategory, type ActionState } from "@/actions/expenses";
 import { Button } from "@/components/ui/button";
 import { Input, Label, FieldError } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
@@ -11,6 +12,7 @@ export function CategoryForm() {
   const [state, formAction, pending] = useActionState(createExpenseCategory, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const prevPending = useRef(pending);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (prevPending.current && !pending && !state.error) {
@@ -22,11 +24,17 @@ export function CategoryForm() {
   return (
     <form ref={formRef} action={formAction} className="flex flex-wrap items-end gap-3">
       <div className="space-y-1.5">
-        <Label htmlFor="new-category-name">New category</Label>
-        <Input id="new-category-name" name="name" placeholder="e.g. Pets" required className="w-48" />
+        <Label htmlFor="new-category-name">{t.expenses.categoryForm.newCategoryLabel}</Label>
+        <Input
+          id="new-category-name"
+          name="name"
+          placeholder={t.expenses.categoryForm.namePlaceholder}
+          required
+          className="w-48"
+        />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="new-category-color">Color</Label>
+        <Label htmlFor="new-category-color">{t.expenses.categoryForm.colorLabel}</Label>
         <input
           id="new-category-color"
           name="color"
@@ -36,7 +44,7 @@ export function CategoryForm() {
         />
       </div>
       <Button type="submit" disabled={pending}>
-        {pending ? "Adding…" : "Add category"}
+        {pending ? t.expenses.categoryForm.adding : t.expenses.categoryForm.addCategory}
       </Button>
       <div className="basis-full">
         <FieldError>{state.error}</FieldError>

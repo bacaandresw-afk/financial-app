@@ -6,9 +6,12 @@ import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { HoldingCard, type HoldingCardData } from "@/components/investments/holding-card";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export default async function InvestmentsPage() {
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
 
   const assets = await prisma.asset.findMany({
     where: { userId: user.id },
@@ -74,20 +77,18 @@ export default async function InvestmentsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold">Investments</h1>
-          <p className="text-sm text-muted-foreground">
-            Track your brokers, assets, and buy/sell transactions.
-          </p>
+          <h1 className="text-2xl font-semibold">{t.investments.title}</h1>
+          <p className="text-sm text-muted-foreground">{t.investments.subtitle}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/investments/brokers">
-            <Button variant="outline">Manage brokers</Button>
+            <Button variant="outline">{t.investments.manageBrokers}</Button>
           </Link>
           <Link href="/investments/dashboard">
-            <Button variant="secondary">View dashboard</Button>
+            <Button variant="secondary">{t.investments.viewDashboard}</Button>
           </Link>
           <Link href="/investments/new">
-            <Button>Add investment</Button>
+            <Button>{t.investments.addInvestment}</Button>
           </Link>
         </div>
       </div>
@@ -97,21 +98,24 @@ export default async function InvestmentsPage() {
           {Array.from(totalsByCurrency.entries()).map(([currency, totals]) => (
             <Card key={currency}>
               <CardHeader>
-                <CardTitle>Summary ({currency})</CardTitle>
+                <CardTitle>{t.investments.summary.title(currency)}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <SummaryRow label="Total invested" value={formatCurrency(totals.invested, currency)} />
                 <SummaryRow
-                  label="Current value"
+                  label={t.investments.summary.totalInvested}
+                  value={formatCurrency(totals.invested, currency)}
+                />
+                <SummaryRow
+                  label={t.investments.summary.currentValue}
                   value={
                     totals.currentValue > 0 || !totals.missingPrice
                       ? formatCurrency(totals.currentValue, currency)
                       : "—"
                   }
-                  hint={totals.missingPrice ? "Some assets are missing a current price" : undefined}
+                  hint={totals.missingPrice ? t.investments.summary.missingPriceHint : undefined}
                 />
                 <SummaryRow
-                  label="Total P/L"
+                  label={t.investments.summary.totalPL}
                   value={formatCurrency(totals.pl, currency)}
                   valueClassName={totals.pl >= 0 ? "text-success" : "text-destructive"}
                 />
@@ -124,17 +128,15 @@ export default async function InvestmentsPage() {
       {hasHoldings ? (
         <div className="space-y-3">
           {holdings.map((holding) => (
-            <HoldingCard key={holding.id} holding={holding} />
+            <HoldingCard key={holding.id} holding={holding} t={t.investments} />
           ))}
         </div>
       ) : (
         <Card>
           <CardContent className="py-10 text-center space-y-3">
-            <p className="text-muted-foreground">
-              You haven&apos;t added any investments yet.
-            </p>
+            <p className="text-muted-foreground">{t.investments.empty.message}</p>
             <Link href="/investments/new">
-              <Button>Add your first investment</Button>
+              <Button>{t.investments.empty.cta}</Button>
             </Link>
           </CardContent>
         </Card>

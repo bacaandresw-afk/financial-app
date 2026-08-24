@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TransactionForm } from "./transaction-form";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 export function AddTransactionSection({
   assetId,
@@ -14,12 +15,13 @@ export function AddTransactionSection({
   currency: string;
   brokers: { id: string; name: string }[];
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   if (brokers.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
-        Add a broker before recording more transactions.
+        {t.investments.addTransactionSection.needBroker}
       </p>
     );
   }
@@ -28,7 +30,7 @@ export function AddTransactionSection({
     return (
       <Button variant="secondary" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
-        Add transaction
+        {t.investments.addTransactionSection.addTransaction}
       </Button>
     );
   }

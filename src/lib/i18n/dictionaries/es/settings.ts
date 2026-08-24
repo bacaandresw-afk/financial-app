@@ -1,0 +1,18 @@
+export const settings = {
+  title: "Configuración",
+  expenseCategories: "Categorías de gastos",
+  expenseCategoriesDesc: "Creá, renombrá o eliminá categorías de gastos",
+  incomeCategories: "Categorías de ingresos",
+  incomeCategoriesDesc: "Creá, renombrá o eliminá categorías de ingresos",
+  brokers: "Brokers",
+  brokersDesc: "Administrá los brokers con los que invertís",
+  appearance: "Apariencia",
+  appearanceDesc: "Elegí cómo se ve Finance en este dispositivo",
+  language: "Idioma",
+  languageDesc: "Elegí el idioma que se usa en toda la aplicación",
+  english: "English",
+  spanish: "Español",
+  themeLight: "Claro",
+  themeDark: "Oscuro",
+  themeSystem: "Sistema",
+};

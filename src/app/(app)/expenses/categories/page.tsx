@@ -5,9 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { CategoryForm } from "@/components/expenses/category-form";
 import { CategoryRow } from "@/components/expenses/category-row";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export default async function ExpenseCategoriesPage() {
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
 
   const categories = await prisma.expenseCategory.findMany({
     where: { userId: user.id },
@@ -23,9 +26,9 @@ export default async function ExpenseCategoriesPage() {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to expenses
+          {t.expenses.backToExpenses}
         </Link>
-        <h1 className="text-2xl font-semibold mt-2">Expense categories</h1>
+        <h1 className="text-2xl font-semibold mt-2">{t.expenses.categoriesPage.title}</h1>
       </div>
 
       <Card>
@@ -38,7 +41,7 @@ export default async function ExpenseCategoriesPage() {
         {categories.length === 0 ? (
           <CardContent>
             <p className="text-sm text-muted-foreground text-center py-6">
-              No categories yet. Add your first one above.
+              {t.expenses.categoriesPage.empty}
             </p>
           </CardContent>
         ) : (

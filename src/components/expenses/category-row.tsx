@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { Pencil, Trash2, Check, X } from "lucide-react";
 import { updateExpenseCategory, deleteExpenseCategory, type ActionState } from "@/actions/expenses";
 import { Input, FieldError } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
@@ -12,6 +13,7 @@ export function CategoryRow({
 }: {
   category: { id: string; name: string; color: string | null; expenseCount: number };
 }) {
+  const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [updateState, updateFormAction, updatePending] = useActionState(
     updateExpenseCategory,
@@ -45,7 +47,7 @@ export function CategoryRow({
           <button
             type="submit"
             disabled={updatePending}
-            aria-label="Save"
+            aria-label={t.common.save}
             className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-success hover:bg-accent shrink-0"
           >
             <Check className="h-4 w-4" />
@@ -53,7 +55,7 @@ export function CategoryRow({
           <button
             type="button"
             onClick={() => setEditing(false)}
-            aria-label="Cancel"
+            aria-label={t.common.cancel}
             className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:bg-accent shrink-0"
           >
             <X className="h-4 w-4" />
@@ -68,12 +70,15 @@ export function CategoryRow({
           />
           <p className="flex-1 font-medium truncate">{category.name}</p>
           <span className="text-xs text-muted-foreground shrink-0">
-            {category.expenseCount} expense{category.expenseCount === 1 ? "" : "s"}
+            {category.expenseCount}{" "}
+            {category.expenseCount === 1
+              ? t.expenses.categoryRow.expenseSingular
+              : t.expenses.categoryRow.expensePlural}
           </span>
           <button
             type="button"
             onClick={() => setEditing(true)}
-            aria-label="Rename category"
+            aria-label={t.expenses.categoryRow.renameCategory}
             className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent shrink-0"
           >
             <Pencil className="h-4 w-4" />
@@ -81,14 +86,16 @@ export function CategoryRow({
           <form
             action={deleteFormAction}
             onSubmit={(e) => {
-              if (!confirm(`Delete "${category.name}"?`)) e.preventDefault();
+              if (!confirm(t.expenses.categoryRow.deleteConfirm.replace("{name}", category.name))) {
+                e.preventDefault();
+              }
             }}
           >
             <input type="hidden" name="id" value={category.id} />
             <button
               type="submit"
               disabled={deletePending}
-              aria-label="Delete category"
+              aria-label={t.expenses.categoryRow.deleteCategory}
               className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-accent shrink-0"
             >
               <Trash2 className="h-4 w-4" />

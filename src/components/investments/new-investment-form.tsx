@@ -7,11 +7,14 @@ import { ASSET_TYPES, CURRENCIES } from "@/lib/validations";
 import { formatCurrency, todayDateInputValue } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea, FieldError } from "@/components/ui/input";
-import { ASSET_TYPE_LABELS } from "./asset-type-labels";
+import { getAssetTypeLabels } from "./asset-type-labels";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
 export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: string }[] }) {
+  const { t } = useTranslation();
+  const ASSET_TYPE_LABELS = getAssetTypeLabels(t.investments);
   const [state, formAction, pending] = useActionState(createAsset, initialState);
   const [quantity, setQuantity] = useState("");
   const [pricePerUnit, setPricePerUnit] = useState("");
@@ -27,9 +30,9 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
   if (brokers.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-card p-5 text-sm space-y-3">
-        <p>You need at least one broker before adding an investment.</p>
+        <p>{t.investments.form.needBroker}</p>
         <Link href="/investments/brokers">
-          <Button type="button">Add a broker</Button>
+          <Button type="button">{t.investments.form.addBroker}</Button>
         </Link>
       </div>
     );
@@ -39,11 +42,17 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
     <form action={formAction} className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" placeholder="e.g. Apple Inc." required autoFocus />
+          <Label htmlFor="name">{t.common.name}</Label>
+          <Input
+            id="name"
+            name="name"
+            placeholder={t.investments.form.namePlaceholder}
+            required
+            autoFocus
+          />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="type">Type</Label>
+          <Label htmlFor="type">{t.investments.form.type}</Label>
           <Select id="type" name="type" required defaultValue={ASSET_TYPES[0]}>
             {ASSET_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -53,7 +62,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="currency">Currency</Label>
+          <Label htmlFor="currency">{t.common.currency}</Label>
           <Select
             id="currency"
             name="currency"
@@ -69,7 +78,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="brokerId">Broker</Label>
+          <Label htmlFor="brokerId">{t.investments.form.broker}</Label>
           <Select id="brokerId" name="brokerId" required defaultValue={brokers[0]?.id}>
             {brokers.map((broker) => (
               <option key={broker.id} value={broker.id}>
@@ -81,10 +90,10 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
       </div>
 
       <div className="border-t border-border pt-5">
-        <h3 className="text-sm font-medium mb-3">First purchase</h3>
+        <h3 className="text-sm font-medium mb-3">{t.investments.form.firstPurchase}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date">{t.common.date}</Label>
             <Input
               id="date"
               name="date"
@@ -94,7 +103,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="quantity">Quantity</Label>
+            <Label htmlFor="quantity">{t.investments.form.quantity}</Label>
             <Input
               id="quantity"
               name="quantity"
@@ -107,7 +116,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="pricePerUnit">Price per unit</Label>
+            <Label htmlFor="pricePerUnit">{t.investments.form.pricePerUnit}</Label>
             <Input
               id="pricePerUnit"
               name="pricePerUnit"
@@ -120,21 +129,21 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Total</Label>
+            <Label>{t.investments.form.total}</Label>
             <div className="h-11 flex items-center px-3 rounded-lg border border-border bg-muted text-sm font-medium">
               {total != null ? formatCurrency(total, currency) : "—"}
             </div>
           </div>
         </div>
         <div className="space-y-1.5 mt-4">
-          <Label htmlFor="notes">Notes (optional)</Label>
-          <Textarea id="notes" name="notes" placeholder="Optional notes about this purchase" />
+          <Label htmlFor="notes">{t.investments.form.notesOptional}</Label>
+          <Textarea id="notes" name="notes" placeholder={t.investments.form.notesPlaceholder} />
         </div>
       </div>
 
       <FieldError>{state.error}</FieldError>
       <Button type="submit" disabled={pending} size="lg">
-        {pending ? "Adding…" : "Add investment"}
+        {pending ? t.investments.form.submitting : t.investments.form.submit}
       </Button>
     </form>
   );

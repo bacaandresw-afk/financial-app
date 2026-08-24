@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FilterBar } from "@/components/expenses/filter-bar";
 import { ExpenseRow, type ExpenseRowData } from "@/components/expenses/expense-row";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 function currentMonthValue(): string {
   const now = new Date();
@@ -32,6 +34,7 @@ export default async function ExpensesPage({
   searchParams: Promise<{ month?: string; categoryId?: string }>;
 }) {
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
   const params = await searchParams;
 
   const month = params.month ?? currentMonthValue();
@@ -82,11 +85,11 @@ export default async function ExpensesPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <h1 className="text-2xl font-semibold">Expenses</h1>
+        <h1 className="text-2xl font-semibold">{t.expenses.title}</h1>
         <Link href="/expenses/new">
           <Button>
             <Plus className="h-4 w-4" />
-            Add expense
+            {t.expenses.addExpense}
           </Button>
         </Link>
       </div>
@@ -96,7 +99,7 @@ export default async function ExpensesPage({
 
         {currencyTotals.length > 0 && (
           <div className="text-sm text-muted-foreground">
-            Total:{" "}
+            {t.expenses.totalLabel}{" "}
             {currencyTotals
               .map(([currency, amount]) => formatCurrency(amount, currency))
               .join(" · ")}
@@ -109,26 +112,26 @@ export default async function ExpensesPage({
           <CardContent>
             {!hasAnyCategories ? (
               <div className="text-center py-8 space-y-3">
-                <p className="font-medium">Let&apos;s set up your first category</p>
+                <p className="font-medium">{t.expenses.emptyState.setupCategoryTitle}</p>
                 <p className="text-sm text-muted-foreground">
-                  You need at least one expense category before you can log an expense.
+                  {t.expenses.emptyState.setupCategoryDesc}
                 </p>
                 <Link href="/expenses/categories">
-                  <Button type="button">Create a category</Button>
+                  <Button type="button">{t.expenses.createCategory}</Button>
                 </Link>
               </div>
             ) : isFiltered ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                No expenses match these filters.
+                {t.expenses.emptyState.noMatch}
               </p>
             ) : (
               <div className="text-center py-8 space-y-3">
-                <p className="font-medium">No expenses yet</p>
+                <p className="font-medium">{t.expenses.emptyState.noneYetTitle}</p>
                 <p className="text-sm text-muted-foreground">
-                  Log your first expense to start tracking your spending.
+                  {t.expenses.emptyState.noneYetDesc}
                 </p>
                 <Link href="/expenses/new">
-                  <Button type="button">Add expense</Button>
+                  <Button type="button">{t.expenses.addExpense}</Button>
                 </Link>
               </div>
             )}
@@ -140,7 +143,7 @@ export default async function ExpensesPage({
 
       <div className="text-center">
         <Link href="/expenses/categories" className="text-sm text-muted-foreground hover:text-foreground">
-          Manage categories
+          {t.expenses.manageCategories}
         </Link>
       </div>
     </div>

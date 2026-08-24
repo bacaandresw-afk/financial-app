@@ -6,6 +6,7 @@ import { TRANSACTION_TYPES } from "@/lib/validations";
 import { formatCurrency, todayDateInputValue } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea, FieldError } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
@@ -32,6 +33,7 @@ export function TransactionForm({
   defaultValues?: TransactionFormValues;
   onCancel?: () => void;
 }) {
+  const { t } = useTranslation();
   const isEdit = Boolean(defaultValues?.id);
   const action = isEdit ? updateTransaction : createTransaction;
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -57,22 +59,22 @@ export function TransactionForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor={`type-${assetId}`}>Type</Label>
+          <Label htmlFor={`type-${assetId}`}>{t.investments.transactionForm.type}</Label>
           <Select
             id={`type-${assetId}`}
             name="type"
             required
             defaultValue={defaultValues?.type ?? "BUY"}
           >
-            {TRANSACTION_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {t === "BUY" ? "Buy" : "Sell"}
+            {TRANSACTION_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {t.investments.transactionTypes[type]}
               </option>
             ))}
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`brokerId-${assetId}`}>Broker</Label>
+          <Label htmlFor={`brokerId-${assetId}`}>{t.investments.transactionForm.broker}</Label>
           <Select
             id={`brokerId-${assetId}`}
             name="brokerId"
@@ -87,7 +89,7 @@ export function TransactionForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`date-${assetId}`}>Date</Label>
+          <Label htmlFor={`date-${assetId}`}>{t.common.date}</Label>
           <Input
             id={`date-${assetId}`}
             name="date"
@@ -97,7 +99,7 @@ export function TransactionForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`quantity-${assetId}`}>Quantity</Label>
+          <Label htmlFor={`quantity-${assetId}`}>{t.investments.transactionForm.quantity}</Label>
           <Input
             id={`quantity-${assetId}`}
             name="quantity"
@@ -110,7 +112,9 @@ export function TransactionForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`pricePerUnit-${assetId}`}>Price per unit</Label>
+          <Label htmlFor={`pricePerUnit-${assetId}`}>
+            {t.investments.transactionForm.pricePerUnit}
+          </Label>
           <Input
             id={`pricePerUnit-${assetId}`}
             name="pricePerUnit"
@@ -123,7 +127,7 @@ export function TransactionForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label>Total</Label>
+          <Label>{t.investments.transactionForm.total}</Label>
           <div className="h-11 flex items-center px-3 rounded-lg border border-border bg-muted text-sm font-medium">
             {total != null ? formatCurrency(total, currency) : "—"}
           </div>
@@ -131,7 +135,7 @@ export function TransactionForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor={`notes-${assetId}`}>Notes (optional)</Label>
+        <Label htmlFor={`notes-${assetId}`}>{t.investments.transactionForm.notesOptional}</Label>
         <Textarea id={`notes-${assetId}`} name="notes" defaultValue={defaultValues?.notes ?? ""} />
       </div>
 
@@ -139,11 +143,15 @@ export function TransactionForm({
 
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : isEdit ? "Save changes" : "Add transaction"}
+          {pending
+            ? t.investments.transactionForm.saving
+            : isEdit
+              ? t.investments.transactionForm.saveChanges
+              : t.investments.transactionForm.addTransaction}
         </Button>
         {onCancel && (
           <Button type="button" variant="ghost" onClick={onCancel}>
-            Cancel
+            {t.common.cancel}
           </Button>
         )}
       </div>

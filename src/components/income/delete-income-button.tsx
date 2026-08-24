@@ -3,17 +3,19 @@
 import { useActionState } from "react";
 import { Trash2 } from "lucide-react";
 import { deleteIncome, type IncomeActionState } from "@/actions/income";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: IncomeActionState = { error: null };
 
 export function DeleteIncomeButton({ id }: { id: string }) {
   const [state, formAction, pending] = useActionState(deleteIncome, initialState);
+  const { t } = useTranslation();
 
   return (
     <form
       action={formAction}
       onSubmit={(event) => {
-        if (!window.confirm("Delete this income entry? This can't be undone.")) {
+        if (!window.confirm(t.income.deleteButton.confirm)) {
           event.preventDefault();
         }
       }}
@@ -22,8 +24,8 @@ export function DeleteIncomeButton({ id }: { id: string }) {
       <button
         type="submit"
         disabled={pending}
-        aria-label="Delete income entry"
-        title="Delete"
+        aria-label={t.income.deleteButton.ariaLabel}
+        title={t.common.delete}
         className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-destructive transition-colors disabled:opacity-50"
       >
         <Trash2 className="h-4 w-4" />

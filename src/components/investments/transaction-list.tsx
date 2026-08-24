@@ -7,6 +7,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/input";
 import { TransactionForm, type TransactionFormValues } from "./transaction-form";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
@@ -33,8 +34,9 @@ export function TransactionList({
   brokers: { id: string; name: string }[];
   transactions: TransactionRow[];
 }) {
+  const { t } = useTranslation();
   if (transactions.length === 0) {
-    return <p className="text-sm text-muted-foreground">No transactions recorded yet.</p>;
+    return <p className="text-sm text-muted-foreground">{t.investments.transactionList.empty}</p>;
   }
 
   return (
@@ -63,6 +65,7 @@ function TransactionRowItem({
   brokers: { id: string; name: string }[];
   transaction: TransactionRow;
 }) {
+  const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [deleteState, deleteFormAction, deletePending] = useActionState(
     deleteTransaction,
@@ -103,7 +106,7 @@ function TransactionRowItem({
                 : "text-xs font-semibold px-2 py-0.5 rounded-full bg-destructive/10 text-destructive"
             }
           >
-            {transaction.type}
+            {t.investments.transactionTypes[transaction.type]}
           </span>
           <span className="text-sm">{formatDate(transaction.date)}</span>
           <span className="text-sm text-muted-foreground">{transaction.brokerName}</span>
@@ -114,7 +117,12 @@ function TransactionRowItem({
           </span>
           <span className="font-medium">{formatCurrency(transaction.totalAmount, currency)}</span>
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={() => setEditing(true)} aria-label="Edit">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setEditing(true)}
+              aria-label={t.investments.transactionList.edit}
+            >
               <Pencil className="h-4 w-4" />
             </Button>
             <form action={deleteFormAction}>
@@ -125,9 +133,9 @@ function TransactionRowItem({
                 variant="ghost"
                 size="icon"
                 disabled={deletePending}
-                aria-label="Delete"
+                aria-label={t.investments.transactionList.delete}
                 onClick={(e) => {
-                  if (!confirm("Delete this transaction?")) e.preventDefault();
+                  if (!confirm(t.investments.transactionList.confirmDelete)) e.preventDefault();
                 }}
               >
                 <Trash2 className="h-4 w-4 text-destructive" />

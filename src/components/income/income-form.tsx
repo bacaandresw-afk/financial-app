@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea, FieldError } from "@/components/ui/input";
 import { CURRENCIES } from "@/lib/validations";
 import { todayDateInputValue } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: IncomeActionState = { error: null };
 
@@ -33,13 +34,14 @@ export function IncomeForm({
 }) {
   const action = mode === "create" ? createIncome : updateIncome;
   const [state, formAction, pending] = useActionState(action, initialState);
+  const { t } = useTranslation();
 
   if (categories.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-card p-5 text-sm text-muted-foreground space-y-3">
-        <p>You need at least one income category before you can log income.</p>
+        <p>{t.income.form.needCategory}</p>
         <Link href="/income/categories" className="text-primary font-medium">
-          Create a category
+          {t.income.createCategory}
         </Link>
       </div>
     );
@@ -53,7 +55,7 @@ export function IncomeForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="amount">Amount</Label>
+          <Label htmlFor="amount">{t.common.amount}</Label>
           <Input
             id="amount"
             name="amount"
@@ -66,7 +68,7 @@ export function IncomeForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="currency">Currency</Label>
+          <Label htmlFor="currency">{t.common.currency}</Label>
           <Select id="currency" name="currency" defaultValue={defaultValues?.currency ?? "ARS"}>
             {CURRENCIES.map((currency) => (
               <option key={currency} value={currency}>
@@ -78,7 +80,7 @@ export function IncomeForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="date">Date</Label>
+        <Label htmlFor="date">{t.common.date}</Label>
         <Input
           id="date"
           name="date"
@@ -89,10 +91,10 @@ export function IncomeForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="categoryId">Category</Label>
+        <Label htmlFor="categoryId">{t.common.category}</Label>
         <Select id="categoryId" name="categoryId" defaultValue={defaultValues?.categoryId ?? ""} required>
           <option value="" disabled>
-            Select a category
+            {t.income.form.selectCategory}
           </option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -103,18 +105,18 @@ export function IncomeForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="source">Source (optional)</Label>
+        <Label htmlFor="source">{t.income.form.sourceLabel}</Label>
         <Input
           id="source"
           name="source"
           type="text"
-          placeholder="e.g. Employer, client name"
+          placeholder={t.income.form.sourcePlaceholder}
           defaultValue={defaultValues?.source ?? ""}
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="description">Description (optional)</Label>
+        <Label htmlFor="description">{t.income.form.descriptionLabel}</Label>
         <Textarea
           id="description"
           name="description"
@@ -126,13 +128,13 @@ export function IncomeForm({
 
       <div className="flex gap-3">
         <Button type="submit" disabled={pending} className="flex-1">
-          {pending ? "Saving…" : mode === "create" ? "Add income" : "Save changes"}
+          {pending ? t.common.saving : mode === "create" ? t.income.addIncome : t.income.form.saveChanges}
         </Button>
         <Link
           href="/income"
           className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
         >
-          Cancel
+          {t.common.cancel}
         </Link>
       </div>
     </form>

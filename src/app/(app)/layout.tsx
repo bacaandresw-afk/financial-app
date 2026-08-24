@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <main className="md:pl-60 pb-20 md:pb-8">
         <div className="max-w-5xl mx-auto px-4 py-6 sm:px-6 sm:py-8">{children}</div>
       </main>
-      <Fab href="/expenses/new" label="Add expense" />
+      <Fab />
       <BottomNav />
     </div>
   );

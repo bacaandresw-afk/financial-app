@@ -7,6 +7,8 @@ import { periodSchema, type Period } from "@/lib/validations";
 import { IncomeFilters } from "@/components/income/income-filters";
 import { IncomeList } from "@/components/income/income-list";
 import { IncomeTotals } from "@/components/income/income-totals";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 type SearchParams = {
   period?: string;
@@ -21,6 +23,7 @@ export default async function IncomePage({
   searchParams: Promise<SearchParams>;
 }) {
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
   const sp = await searchParams;
 
   const parsedPeriod = periodSchema.safeParse(sp.period);
@@ -66,8 +69,8 @@ export default async function IncomePage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Income</h1>
-          <p className="text-muted-foreground mt-1">Track and review your income</p>
+          <h1 className="text-2xl font-semibold">{t.income.title}</h1>
+          <p className="text-muted-foreground mt-1">{t.income.subtitle}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link
@@ -75,14 +78,14 @@ export default async function IncomePage({
             className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
           >
             <Settings2 className="h-4 w-4" />
-            Categories
+            {t.income.categoriesLink}
           </Link>
           <Link
             href="/income/new"
             className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
-            Add income
+            {t.income.addIncome}
           </Link>
         </div>
       </div>
@@ -99,18 +102,18 @@ export default async function IncomePage({
 
       {totalCount === 0 ? (
         <div className="rounded-xl border border-border bg-card p-10 text-center space-y-3">
-          <p className="text-muted-foreground">You haven&apos;t logged any income yet.</p>
+          <p className="text-muted-foreground">{t.income.emptyState.noneYet}</p>
           <Link
             href="/income/new"
             className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
-            Add your first income
+            {t.income.emptyState.addFirst}
           </Link>
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-10 text-center">
-          <p className="text-muted-foreground">No income entries match this filter.</p>
+          <p className="text-muted-foreground">{t.income.emptyState.noMatch}</p>
         </div>
       ) : (
         <IncomeList incomes={items} />

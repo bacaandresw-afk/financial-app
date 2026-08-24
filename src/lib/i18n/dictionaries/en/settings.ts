@@ -1,0 +1,18 @@
+export const settings = {
+  title: "Settings",
+  expenseCategories: "Expense categories",
+  expenseCategoriesDesc: "Create, rename or remove expense categories",
+  incomeCategories: "Income categories",
+  incomeCategoriesDesc: "Create, rename or remove income categories",
+  brokers: "Brokers",
+  brokersDesc: "Manage the brokers you invest through",
+  appearance: "Appearance",
+  appearanceDesc: "Choose how Finance looks on this device",
+  language: "Language",
+  languageDesc: "Choose the language used across the app",
+  english: "English",
+  spanish: "Español",
+  themeLight: "Light",
+  themeDark: "Dark",
+  themeSystem: "System",
+};

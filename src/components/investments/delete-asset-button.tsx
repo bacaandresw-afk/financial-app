@@ -5,10 +5,12 @@ import { Trash2 } from "lucide-react";
 import { deleteAsset, type ActionState } from "@/actions/investments";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 const initialState: ActionState = { error: null };
 
 export function DeleteAssetButton({ assetId, assetName }: { assetId: string; assetName: string }) {
+  const { t } = useTranslation();
   const [state, formAction, pending] = useActionState(deleteAsset, initialState);
 
   return (
@@ -19,17 +21,13 @@ export function DeleteAssetButton({ assetId, assetName }: { assetId: string; ass
         variant="destructive"
         disabled={pending}
         onClick={(e) => {
-          if (
-            !confirm(
-              `Delete "${assetName}" and all of its transaction history? This can't be undone.`,
-            )
-          ) {
+          if (!confirm(t.investments.assetDetail.confirmDelete(assetName))) {
             e.preventDefault();
           }
         }}
       >
         <Trash2 className="h-4 w-4" />
-        {pending ? "Deleting…" : "Delete investment"}
+        {pending ? t.investments.assetDetail.deleting : t.investments.assetDetail.deleteInvestment}
       </Button>
       <FieldError>{state.error}</FieldError>
     </form>

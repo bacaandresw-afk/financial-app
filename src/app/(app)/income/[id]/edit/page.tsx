@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { IncomeForm } from "@/components/income/income-form";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export default async function EditIncomePage({
   params,
@@ -9,6 +11,7 @@ export default async function EditIncomePage({
   params: Promise<{ id: string }>;
 }) {
   const user = await requireUser();
+  const t = getDictionary(await getLanguage());
   const { id } = await params;
 
   const [income, categories] = await Promise.all([
@@ -38,8 +41,8 @@ export default async function EditIncomePage({
   return (
     <div className="max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Edit income</h1>
-        <p className="text-muted-foreground mt-1">Update this income entry</p>
+        <h1 className="text-2xl font-semibold">{t.income.editPage.title}</h1>
+        <p className="text-muted-foreground mt-1">{t.income.editPage.subtitle}</p>
       </div>
       <IncomeForm
         mode="edit"

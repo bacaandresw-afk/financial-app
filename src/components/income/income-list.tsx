@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { DeleteIncomeButton } from "@/components/income/delete-income-button";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 export type IncomeListItem = {
   id: string;
@@ -14,6 +17,8 @@ export type IncomeListItem = {
 };
 
 export function IncomeList({ incomes }: { incomes: IncomeListItem[] }) {
+  const { t } = useTranslation();
+
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden divide-y divide-border">
       {incomes.map((income) => (
@@ -35,8 +40,8 @@ export function IncomeList({ incomes }: { incomes: IncomeListItem[] }) {
           <div className="flex items-center gap-1 shrink-0">
             <Link
               href={`/income/${income.id}/edit`}
-              aria-label="Edit income entry"
-              title="Edit"
+              aria-label={t.income.list.editAriaLabel}
+              title={t.common.edit}
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             >
               <Pencil className="h-4 w-4" />

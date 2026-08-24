@@ -2,16 +2,19 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/language-context";
+import type { Language } from "@/lib/i18n/dictionaries";
 
 type CategoryOption = { id: string; name: string };
 
-function monthOptions(count = 12): { value: string; label: string }[] {
+function monthOptions(lang: Language, count = 12): { value: string; label: string }[] {
   const options: { value: string; label: string }[] = [];
   const now = new Date();
+  const locale = lang === "es" ? "es-AR" : "en-US";
   for (let i = 0; i < count; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const label = d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    const label = d.toLocaleDateString(locale, { month: "long", year: "numeric" });
     options.push({ value, label });
   }
   return options;
@@ -29,6 +32,7 @@ export function FilterBar({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t, lang } = useTranslation();
 
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -43,13 +47,13 @@ export function FilterBar({
   return (
     <div className="flex flex-wrap gap-2">
       <Select
-        aria-label="Filter by month"
+        aria-label={t.expenses.filter.filterByMonth}
         value={month}
         onChange={(e) => updateParam("month", e.target.value)}
         className="w-auto"
       >
-        <option value="all">All time</option>
-        {monthOptions().map((m) => (
+        <option value="all">{t.expenses.filter.allTime}</option>
+        {monthOptions(lang).map((m) => (
           <option key={m.value} value={m.value}>
             {m.label}
           </option>
@@ -57,12 +61,12 @@ export function FilterBar({
       </Select>
 
       <Select
-        aria-label="Filter by category"
+        aria-label={t.expenses.filter.filterByCategory}
         value={categoryId}
         onChange={(e) => updateParam("categoryId", e.target.value)}
         className="w-auto"
       >
-        <option value="all">All categories</option>
+        <option value="all">{t.expenses.filter.allCategories}</option>
         {categories.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name}

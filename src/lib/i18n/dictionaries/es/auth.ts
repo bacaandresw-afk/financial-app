@@ -1,0 +1,17 @@
+export const auth = {
+  welcomeBack: "Bienvenido de nuevo",
+  signInSubtitle: "Iniciá sesión en tu cuenta",
+  email: "Correo electrónico",
+  password: "Contraseña",
+  signIn: "Iniciar sesión",
+  signingIn: "Iniciando sesión…",
+  noAccount: "¿Todavía no tenés una cuenta?",
+  createOne: "Creá una",
+  createAccountTitle: "Creá tu cuenta",
+  createAccountSubtitle: "Empezá a controlar tus finanzas",
+  name: "Nombre",
+  passwordHint: "Al menos 8 caracteres",
+  createAccount: "Crear cuenta",
+  creatingAccount: "Creando cuenta…",
+  alreadyHaveAccount: "¿Ya tenés una cuenta?",
+};

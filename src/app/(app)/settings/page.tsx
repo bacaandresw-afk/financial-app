@@ -3,19 +3,40 @@ import { Tags, Wallet2, Building2, LogOut } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { logoutAction } from "@/actions/auth";
 import { Card, CardContent } from "@/components/ui/card";
-
-const LINKS = [
-  { href: "/expenses/categories", label: "Expense categories", description: "Create, rename or remove expense categories", icon: Tags },
-  { href: "/income/categories", label: "Income categories", description: "Create, rename or remove income categories", icon: Wallet2 },
-  { href: "/investments/brokers", label: "Brokers", description: "Manage the brokers you invest through", icon: Building2 },
-];
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { LanguageSwitcher } from "@/components/settings/language-switcher";
 
 export default async function SettingsPage() {
   const user = await requireUser();
+  const lang = await getLanguage();
+  const t = getDictionary(lang);
+
+  const LINKS = [
+    {
+      href: "/expenses/categories",
+      label: t.settings.expenseCategories,
+      description: t.settings.expenseCategoriesDesc,
+      icon: Tags,
+    },
+    {
+      href: "/income/categories",
+      label: t.settings.incomeCategories,
+      description: t.settings.incomeCategoriesDesc,
+      icon: Wallet2,
+    },
+    {
+      href: "/investments/brokers",
+      label: t.settings.brokers,
+      description: t.settings.brokersDesc,
+      icon: Building2,
+    },
+  ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Settings</h1>
+      <h1 className="text-2xl font-semibold">{t.settings.title}</h1>
 
       <Card>
         <CardContent className="flex items-center justify-between">
@@ -29,9 +50,29 @@ export default async function SettingsPage() {
               className="inline-flex items-center gap-2 text-sm font-medium text-destructive hover:opacity-80"
             >
               <LogOut className="h-4 w-4" />
-              Log out
+              {t.nav.logOut}
             </button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="font-medium">{t.settings.appearance}</p>
+            <p className="text-sm text-muted-foreground">{t.settings.appearanceDesc}</p>
+          </div>
+          <ThemeToggle />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="font-medium">{t.settings.language}</p>
+            <p className="text-sm text-muted-foreground">{t.settings.languageDesc}</p>
+          </div>
+          <LanguageSwitcher />
         </CardContent>
       </Card>
 

@@ -40,11 +40,3 @@ export function getPeriodRange(
   }
 }
 
-export const PERIOD_LABELS: Record<Period, string> = {
-  this_month: "This month",
-  last_month: "Last month",
-  last_3_months: "Last 3 months",
-  last_6_months: "Last 6 months",
-  this_year: "This year",
-  custom: "Custom range",
-};

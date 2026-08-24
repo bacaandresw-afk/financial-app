@@ -2,10 +2,17 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, Input, Label } from "@/components/ui/input";
-import { PERIOD_LABELS } from "@/lib/date-range";
 import type { Period } from "@/lib/validations";
+import { useTranslation } from "@/lib/i18n/language-context";
 
-const PERIOD_OPTIONS = Object.keys(PERIOD_LABELS) as Period[];
+const PERIOD_OPTIONS: Period[] = [
+  "this_month",
+  "last_month",
+  "last_3_months",
+  "last_6_months",
+  "this_year",
+  "custom",
+];
 
 type Category = { id: string; name: string };
 
@@ -25,6 +32,7 @@ export function IncomeFilters({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   function updateParams(updates: Record<string, string | null>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -41,7 +49,7 @@ export function IncomeFilters({
   return (
     <div className="flex flex-wrap items-end gap-3">
       <div className="space-y-1.5">
-        <Label htmlFor="period-filter">Period</Label>
+        <Label htmlFor="period-filter">{t.income.filters.periodLabel}</Label>
         <Select
           id="period-filter"
           value={period}
@@ -57,7 +65,7 @@ export function IncomeFilters({
         >
           {PERIOD_OPTIONS.map((option) => (
             <option key={option} value={option}>
-              {PERIOD_LABELS[option]}
+              {t.common.periods[option]}
             </option>
           ))}
         </Select>
@@ -66,7 +74,7 @@ export function IncomeFilters({
       {period === "custom" ? (
         <>
           <div className="space-y-1.5">
-            <Label htmlFor="from-filter">From</Label>
+            <Label htmlFor="from-filter">{t.income.filters.fromLabel}</Label>
             <Input
               id="from-filter"
               type="date"
@@ -76,7 +84,7 @@ export function IncomeFilters({
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="to-filter">To</Label>
+            <Label htmlFor="to-filter">{t.income.filters.toLabel}</Label>
             <Input
               id="to-filter"
               type="date"
@@ -89,14 +97,14 @@ export function IncomeFilters({
       ) : null}
 
       <div className="space-y-1.5">
-        <Label htmlFor="category-filter">Category</Label>
+        <Label htmlFor="category-filter">{t.common.category}</Label>
         <Select
           id="category-filter"
           value={categoryId}
           onChange={(event) => updateParams({ categoryId: event.target.value || null })}
           className="w-44"
         >
-          <option value="">All categories</option>
+          <option value="">{t.income.filters.allCategories}</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}

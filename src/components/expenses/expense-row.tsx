@@ -3,6 +3,8 @@ import { Pencil } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import { DeleteExpenseButton } from "./delete-expense-button";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export type ExpenseRowData = {
   id: string;
@@ -14,7 +16,9 @@ export type ExpenseRowData = {
   receipt: { storagePath: string } | null;
 };
 
-export function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
+export async function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
+  const t = getDictionary(await getLanguage());
+
   return (
     <div className="flex items-center gap-3 py-3 px-4 border-b border-border last:border-b-0">
       <div
@@ -44,7 +48,7 @@ export function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
       <div className="flex items-center gap-1 shrink-0">
         <Link
           href={`/expenses/${expense.id}/edit`}
-          aria-label="Edit expense"
+          aria-label={t.expenses.row.editExpense}
           className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
         >
           <Pencil className="h-4 w-4" />

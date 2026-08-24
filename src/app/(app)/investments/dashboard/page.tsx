@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { CURRENCIES } from "@/lib/validations";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { getLanguage } from "@/lib/i18n/language";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { computeAssetPerformance, type TransactionInput } from "@/lib/portfolio";
 import { CurrencyToggle } from "@/components/investments-dashboard/currency-toggle";
 import { StatCard } from "@/components/investments-dashboard/stat-card";
@@ -42,6 +44,8 @@ export default async function InvestmentsDashboardPage({
 }) {
   const user = await requireUser();
   const sp = await searchParams;
+  const lang = await getLanguage();
+  const t = getDictionary(lang);
   const currency = await resolveCurrency(user.id, first(sp.currency));
 
   const assets = await prisma.asset.findMany({
@@ -143,7 +147,7 @@ export default async function InvestmentsDashboardPage({
   // when no current price is set) — never mixing currencies.
   const allocationByType = aggregateByName(
     assetPerf.map((a) => ({
-      name: assetTypeLabel(a.type),
+      name: assetTypeLabel(a.type, t.investmentsDashboard.assetTypes),
       value: a.perf.currentValue ?? a.perf.costBasisRemaining,
     })),
   );
@@ -156,62 +160,67 @@ export default async function InvestmentsDashboardPage({
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold">Investments dashboard</h1>
+        <h1 className="text-2xl font-semibold">{t.investmentsDashboard.title}</h1>
         <CurrencyToggle currency={currency} />
       </div>
 
       {!hasAnyAssets ? (
         <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-          No {currency} assets yet. Add an asset and some transactions to see your portfolio
-          performance here.
+          {t.investmentsDashboard.noAssetsForCurrency(currency)}
         </div>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatCard label="Total invested capital" value={formatCurrency(totalInvested, currency)} />
-            <StatCard label="Current portfolio value" value={formatCurrency(totalCurrentValue, currency)} />
             <StatCard
-              label="Total profit / loss"
+              label={t.investmentsDashboard.stats.totalInvested}
+              value={formatCurrency(totalInvested, currency)}
+            />
+            <StatCard
+              label={t.investmentsDashboard.stats.currentValue}
+              value={formatCurrency(totalCurrentValue, currency)}
+            />
+            <StatCard
+              label={t.investmentsDashboard.stats.totalGain}
               value={formatCurrency(totalGain, currency)}
               valueClassName={totalGain >= 0 ? "text-success" : "text-destructive"}
             />
             <StatCard
-              label="Overall return"
+              label={t.investmentsDashboard.stats.overallReturn}
               value={formatPercent(overallReturnPct)}
               valueClassName={overallReturnPct >= 0 ? "text-success" : "text-destructive"}
             />
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <ChartCard title="Performance by asset">
+            <ChartCard title={t.investmentsDashboard.charts.performanceByAsset}>
               {performanceByAsset.length > 0 ? (
                 <PerformanceBarChart data={performanceByAsset} currency={currency} />
               ) : (
-                <EmptyState message="No assets to show yet." />
+                <EmptyState message={t.investmentsDashboard.empty.noAssets} />
               )}
             </ChartCard>
 
-            <ChartCard title="Performance by broker">
+            <ChartCard title={t.investmentsDashboard.charts.performanceByBroker}>
               {performanceByBroker.length > 0 ? (
                 <PerformanceBarChart data={performanceByBroker} currency={currency} />
               ) : (
-                <EmptyState message="No broker transactions to show yet." />
+                <EmptyState message={t.investmentsDashboard.empty.noBrokerTransactions} />
               )}
             </ChartCard>
 
-            <ChartCard title="Allocation by asset type">
+            <ChartCard title={t.investmentsDashboard.charts.allocationByType}>
               {allocationByType.length > 0 ? (
                 <AllocationPieChart data={allocationByType} currency={currency} />
               ) : (
-                <EmptyState message="No valued holdings to show yet." />
+                <EmptyState message={t.investmentsDashboard.empty.noValuedHoldings} />
               )}
             </ChartCard>
 
-            <ChartCard title="Allocation by broker">
+            <ChartCard title={t.investmentsDashboard.charts.allocationByBroker}>
               {allocationByBroker.length > 0 ? (
                 <AllocationPieChart data={allocationByBroker} currency={currency} />
               ) : (
-                <EmptyState message="No valued holdings to show yet." />
+                <EmptyState message={t.investmentsDashboard.empty.noValuedHoldings} />
               )}
             </ChartCard>
           </div>

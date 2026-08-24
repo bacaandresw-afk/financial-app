@@ -1,10 +1,15 @@
+"use client";
+
 import { CategoryRow } from "@/components/income/category-row";
+import { useTranslation } from "@/lib/i18n/language-context";
 
 export function CategoryList({ categories }: { categories: { id: string; name: string }[] }) {
+  const { t } = useTranslation();
+
   if (categories.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">
-        You don&apos;t have any income categories yet. Add one above.
+        {t.income.categoryList.empty}
       </div>
     );
   }

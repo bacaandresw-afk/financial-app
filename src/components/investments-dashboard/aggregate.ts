@@ -12,17 +12,11 @@ export function aggregateByName(items: { name: string; value: number }[]): Named
     .sort((a, b) => b.value - a.value);
 }
 
-const ASSET_TYPE_LABELS: Record<string, string> = {
-  STOCK: "Stocks",
-  ETF: "ETFs",
-  BOND: "Bonds",
-  CEDEAR: "CEDEARs",
-  CRYPTO: "Crypto",
-  MUTUAL_FUND: "Mutual funds",
-  FIXED_INCOME: "Fixed income",
-  OTHER: "Other",
-};
-
-export function assetTypeLabel(type: string): string {
-  return ASSET_TYPE_LABELS[type] ?? type;
+/**
+ * Looks up a translated label for an asset type. `labels` is the caller's
+ * translated map (e.g. `t.investmentsDashboard.assetTypes`) so this stays a
+ * plain, i18n-agnostic helper — falls back to the raw type if unmapped.
+ */
+export function assetTypeLabel(type: string, labels: Record<string, string>): string {
+  return labels[type] ?? type;
 }
