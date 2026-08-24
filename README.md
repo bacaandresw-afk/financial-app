@@ -2,6 +2,8 @@
 
 A full-stack personal finance app: daily expenses (with receipt photos), income tracking, and an investment portfolio module with proper multi-transaction performance calculations (XIRR). Built to be used from your phone, laptop, and desktop against one shared database.
 
+**Live app:** https://financial-app82326.vercel.app
+
 ## Tech stack
 
 - **Next.js 15** (App Router, TypeScript) — one deployable app for both the UI and the backend (Server Actions instead of a separate API server).
