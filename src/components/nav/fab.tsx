@@ -39,12 +39,12 @@ export function Fab() {
   return (
     <div
       ref={containerRef}
-      className="md:hidden fixed z-40 left-1/2 -translate-x-1/2 bottom-[calc(3.25rem+env(safe-area-inset-bottom))]"
+      className="md:hidden fixed z-40 right-4 bottom-[calc(4.75rem+env(safe-area-inset-bottom))]"
     >
       {open && (
         <>
           <div className="fixed inset-0 -z-10 bg-black/20" aria-hidden="true" />
-          <ul className="flex flex-col items-center gap-3 mb-3">
+          <ul className="flex flex-col items-end gap-3 mb-3">
             {ACTIONS.map(({ href, labelKey, icon: Icon }) => (
               <li key={href} className="flex items-center gap-2">
                 <span className="rounded-md bg-card border border-border px-2.5 py-1 text-sm font-medium shadow-sm">
