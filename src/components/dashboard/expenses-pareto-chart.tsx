@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { formatCurrency } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/language-context";
+import { useChartTheme } from "@/lib/chart-theme";
 import { PRIMARY_COLOR, DESTRUCTIVE_COLOR } from "./colors";
 import { toParetoSeries, type NamedTotal } from "./aggregate";
 
@@ -26,6 +27,7 @@ function truncateLabel(name: string): string {
 
 export function ExpensesParetoChart({ data, currency }: { data: NamedTotal[]; currency: string }) {
   const { t } = useTranslation();
+  const chartTheme = useChartTheme();
   const series = toParetoSeries(data);
 
   const amountLabel = t.dashboard.pareto.amount;
@@ -34,10 +36,10 @@ export function ExpensesParetoChart({ data, currency }: { data: NamedTotal[]; cu
   return (
     <ResponsiveContainer width="100%" height={320}>
       <ComposedChart data={series} margin={{ left: 0, right: 8, top: 8, bottom: 32 }}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} />
         <XAxis
           dataKey="name"
-          tick={{ fontSize: 11 }}
+          tick={{ fontSize: 11, fill: chartTheme.axis }}
           tickFormatter={truncateLabel}
           angle={-35}
           textAnchor="end"
@@ -46,7 +48,7 @@ export function ExpensesParetoChart({ data, currency }: { data: NamedTotal[]; cu
         />
         <YAxis
           yAxisId="left"
-          tick={{ fontSize: 11 }}
+          tick={{ fontSize: 11, fill: chartTheme.axis }}
           width={64}
           tickFormatter={(value: number) => formatCurrency(value, currency)}
         />
@@ -54,11 +56,18 @@ export function ExpensesParetoChart({ data, currency }: { data: NamedTotal[]; cu
           yAxisId="right"
           orientation="right"
           domain={[0, 100]}
-          tick={{ fontSize: 11 }}
+          tick={{ fontSize: 11, fill: chartTheme.axis }}
           width={40}
           tickFormatter={(value: number) => `${value}%`}
         />
         <Tooltip
+          contentStyle={{
+            backgroundColor: chartTheme.tooltipBg,
+            border: `1px solid ${chartTheme.tooltipBorder}`,
+            borderRadius: 12,
+            color: chartTheme.tooltipText,
+          }}
+          labelStyle={{ color: chartTheme.tooltipText }}
           formatter={(value: number, name: string) =>
             name === cumulativeLabel
               ? [`${value.toFixed(1)}%`, name]

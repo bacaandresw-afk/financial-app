@@ -25,7 +25,7 @@ export function SideNav({ userName }: { userName: string | null }) {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors",
                 active
                   ? "bg-primary text-primary-foreground"
                   : "text-foreground hover:bg-accent",
@@ -42,7 +42,7 @@ export function SideNav({ userName }: { userName: string | null }) {
         <form action={logoutAction}>
           <button
             type="submit"
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent"
+            className="w-full flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent"
           >
             <LogOut className="h-4.5 w-4.5" />
             {t.nav.logOut}

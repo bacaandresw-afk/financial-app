@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ASSET_TYPES } from "@/lib/validations";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { getAssetTypeLabels } from "./asset-type-labels";
+import { getAssetTypeLabels, getAssetTypeIcon } from "./asset-type-labels";
+import { hashColor } from "@/components/ui/category-icon";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export type HoldingCardData = {
@@ -24,6 +25,7 @@ export function HoldingCard({
   t: Dictionary["investments"];
 }) {
   const ASSET_TYPE_LABELS = getAssetTypeLabels(t);
+  const Icon = getAssetTypeIcon(holding.type);
   const gainClass =
     holding.totalGain == null
       ? "text-muted-foreground"
@@ -34,15 +36,24 @@ export function HoldingCard({
   return (
     <Link
       href={`/investments/${holding.id}`}
-      className="block rounded-xl border border-border bg-card p-4 sm:p-5 hover:border-primary/50 transition-colors"
+      className="block rounded-2xl border border-border bg-card p-4 sm:p-5 hover:border-primary/50 transition-colors"
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-medium">{holding.name}</p>
-          <p className="text-xs text-muted-foreground">
-            {ASSET_TYPE_LABELS[holding.type]} · {holding.currency} · {holding.quantityHeld}{" "}
-            {t.holdingCard.held}
-          </p>
+        <div className="flex items-start gap-3 min-w-0">
+          <div
+            className="h-10 w-10 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ backgroundColor: hashColor(holding.name) }}
+            aria-hidden
+          >
+            <Icon className="h-5 w-5 text-white" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-medium truncate">{holding.name}</p>
+            <p className="text-xs text-muted-foreground">
+              {ASSET_TYPE_LABELS[holding.type]} · {holding.currency} · {holding.quantityHeld}{" "}
+              {t.holdingCard.held}
+            </p>
+          </div>
         </div>
         <div className="text-right">
           <p className="font-medium">

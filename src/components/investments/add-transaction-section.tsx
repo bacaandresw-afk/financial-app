@@ -36,7 +36,7 @@ export function AddTransactionSection({
   }
 
   return (
-    <div className="rounded-lg border border-border p-4 bg-muted/40">
+    <div className="rounded-2xl border border-border p-4 bg-muted/40">
       <TransactionForm
         assetId={assetId}
         currency={currency}

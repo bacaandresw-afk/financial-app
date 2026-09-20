@@ -3,19 +3,20 @@
 // safest as concrete color strings rather than var() references.
 export const SUCCESS_COLOR = "hsl(142, 71%, 35%)";
 export const DESTRUCTIVE_COLOR = "hsl(0, 72%, 51%)";
-export const PRIMARY_COLOR = "hsl(221, 83%, 53%)";
+export const PRIMARY_COLOR = "hsl(35, 90%, 55%)";
 
-// Qualitative palette for multi-slice pies / multi-series bars. Cycles with
-// modulo when there are more categories than colors.
+// Qualitative palette for multi-slice pies / multi-series bars, led by the
+// app's amber accent. Cycles with modulo when there are more categories than
+// colors.
 export const CHART_PALETTE = [
-  "hsl(221, 83%, 53%)",
-  "hsl(142, 71%, 35%)",
-  "hsl(280, 65%, 55%)",
-  "hsl(35, 90%, 50%)",
-  "hsl(0, 72%, 51%)",
-  "hsl(190, 70%, 42%)",
-  "hsl(330, 70%, 55%)",
-  "hsl(50, 85%, 40%)",
+  "hsl(35, 90%, 55%)",
+  "hsl(190, 65%, 45%)",
+  "hsl(0, 72%, 60%)",
+  "hsl(265, 60%, 62%)",
+  "hsl(150, 45%, 45%)",
+  "hsl(200, 80%, 60%)",
+  "hsl(340, 65%, 60%)",
+  "hsl(60, 55%, 45%)",
 ];
 
 export function paletteColor(index: number): string {

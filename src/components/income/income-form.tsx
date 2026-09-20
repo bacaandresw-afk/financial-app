@@ -38,7 +38,7 @@ export function IncomeForm({
 
   if (categories.length === 0) {
     return (
-      <div className="rounded-lg border border-border bg-card p-5 text-sm text-muted-foreground space-y-3">
+      <div className="rounded-2xl border border-border bg-card p-5 text-sm text-muted-foreground space-y-3">
         <p>{t.income.form.needCategory}</p>
         <Link href="/income/categories" className="text-primary font-medium">
           {t.income.createCategory}
@@ -132,7 +132,7 @@ export function IncomeForm({
         </Button>
         <Link
           href="/income"
-          className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
+          className="inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
         >
           {t.common.cancel}
         </Link>

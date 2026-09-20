@@ -29,7 +29,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
 
   if (brokers.length === 0) {
     return (
-      <div className="rounded-lg border border-border bg-card p-5 text-sm space-y-3">
+      <div className="rounded-2xl border border-border bg-card p-5 text-sm space-y-3">
         <p>{t.investments.form.needBroker}</p>
         <Link href="/investments/brokers">
           <Button type="button">{t.investments.form.addBroker}</Button>
@@ -130,7 +130,7 @@ export function NewInvestmentForm({ brokers }: { brokers: { id: string; name: st
           </div>
           <div className="space-y-1.5">
             <Label>{t.investments.form.total}</Label>
-            <div className="h-11 flex items-center px-3 rounded-lg border border-border bg-muted text-sm font-medium">
+            <div className="h-11 flex items-center px-3 rounded-2xl border border-border bg-muted text-sm font-medium">
               {total != null ? formatCurrency(total, currency) : "—"}
             </div>
           </div>

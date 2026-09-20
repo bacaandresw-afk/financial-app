@@ -165,7 +165,7 @@ export default async function InvestmentsDashboardPage({
       </div>
 
       {!hasAnyAssets ? (
-        <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
           {t.investmentsDashboard.noAssetsForCurrency(currency)}
         </div>
       ) : (
