@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/language-context";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { CASH_FLOW_GRANULARITIES, type CashFlowGranularity } from "./aggregate";
 
 export function GranularitySelector({ granularity }: { granularity: CashFlowGranularity }) {
@@ -25,27 +25,12 @@ export function GranularitySelector({ granularity }: { granularity: CashFlowGran
   };
 
   return (
-    <div
-      className="inline-flex rounded-lg border border-border bg-card p-1 shrink-0"
-      role="group"
+    <SegmentedControl
+      value={granularity}
+      onChange={setGranularity}
       aria-label={t.dashboard.granularity.label}
-    >
-      {CASH_FLOW_GRANULARITIES.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => setGranularity(opt)}
-          aria-pressed={granularity === opt}
-          className={cn(
-            "px-3 h-9 rounded-md text-sm font-medium transition-colors",
-            granularity === opt
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:bg-accent",
-          )}
-        >
-          {labels[opt]}
-        </button>
-      ))}
-    </div>
+      className="shrink-0"
+      options={CASH_FLOW_GRANULARITIES.map((opt) => ({ value: opt, label: labels[opt] }))}
+    />
   );
 }

@@ -75,14 +75,14 @@ export default async function IncomePage({
         <div className="flex items-center gap-2">
           <Link
             href="/income/categories"
-            className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
+            className="inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors h-11 px-4 text-sm border border-border bg-transparent hover:bg-accent"
           >
             <Settings2 className="h-4 w-4" />
             {t.income.categoriesLink}
           </Link>
           <Link
             href="/income/new"
-            className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
+            className="inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
             {t.income.addIncome}
@@ -101,18 +101,18 @@ export default async function IncomePage({
       <IncomeTotals totals={totals} />
 
       {totalCount === 0 ? (
-        <div className="rounded-xl border border-border bg-card p-10 text-center space-y-3">
+        <div className="rounded-2xl border border-border bg-card p-10 text-center space-y-3">
           <p className="text-muted-foreground">{t.income.emptyState.noneYet}</p>
           <Link
             href="/income/new"
-            className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
+            className="inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors h-11 px-4 text-sm bg-primary text-primary-foreground hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
             {t.income.emptyState.addFirst}
           </Link>
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card p-10 text-center">
+        <div className="rounded-2xl border border-border bg-card p-10 text-center">
           <p className="text-muted-foreground">{t.income.emptyState.noMatch}</p>
         </div>
       ) : (

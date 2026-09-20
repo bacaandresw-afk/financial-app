@@ -46,7 +46,7 @@ export function CategoryRow({ id, name }: { id: string; name: string }) {
           aria-label={t.income.categoryRow.renameCategory}
           title={t.income.categoryRow.renameTitle}
           onClick={() => setEditing(true)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
         >
           <Pencil className="h-4 w-4" />
         </button>
@@ -64,7 +64,7 @@ export function CategoryRow({ id, name }: { id: string; name: string }) {
             disabled={deletePending}
             aria-label={t.income.categoryRow.deleteCategory}
             title={t.income.categoryRow.deleteTitle}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-destructive transition-colors disabled:opacity-50"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-destructive transition-colors disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" />
           </button>

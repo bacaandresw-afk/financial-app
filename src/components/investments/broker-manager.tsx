@@ -58,7 +58,7 @@ function BrokerRow({ broker }: { broker: BrokerRowData }) {
 
   if (editing) {
     return (
-      <div className="rounded-lg border border-border p-3">
+      <div className="rounded-2xl border border-border p-3">
         <form action={updateFormAction} className="flex items-start gap-3">
           <input type="hidden" name="id" value={broker.id} />
           <div className="flex-1 space-y-1.5">
@@ -77,7 +77,7 @@ function BrokerRow({ broker }: { broker: BrokerRowData }) {
   }
 
   return (
-    <div className="rounded-lg border border-border p-3">
+    <div className="rounded-2xl border border-border p-3">
       <div className="flex items-center justify-between gap-3">
         <span className="font-medium">{broker.name}</span>
         <div className="flex items-center gap-1">

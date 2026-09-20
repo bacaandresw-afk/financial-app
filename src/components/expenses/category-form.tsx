@@ -40,7 +40,7 @@ export function CategoryForm() {
           name="color"
           type="color"
           defaultValue="#6366f1"
-          className="h-11 w-14 rounded-lg border border-border bg-card p-1"
+          className="h-11 w-14 rounded-2xl border border-border bg-card p-1"
         />
       </div>
       <Button type="submit" disabled={pending}>

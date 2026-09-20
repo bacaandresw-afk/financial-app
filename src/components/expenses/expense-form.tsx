@@ -39,7 +39,7 @@ export function ExpenseForm({
 
   if (categories.length === 0) {
     return (
-      <div className="rounded-xl border border-border bg-card p-6 text-center space-y-3">
+      <div className="rounded-2xl border border-border bg-card p-6 text-center space-y-3">
         <p className="font-medium">{t.expenses.form.needCategoryTitle}</p>
         <p className="text-sm text-muted-foreground">
           {t.expenses.form.needCategoryDesc}
@@ -127,7 +127,7 @@ export function ExpenseForm({
         <Label htmlFor="receipt">{t.expenses.form.receiptLabel}</Label>
 
         {isEdit && expense?.receipt && !removeReceipt && (
-          <div className="flex items-center gap-3 rounded-lg border border-border p-2">
+          <div className="flex items-center gap-3 rounded-2xl border border-border p-2">
             <Image
               src={expense.receipt.signedUrl}
               alt={t.expenses.form.currentReceipt}

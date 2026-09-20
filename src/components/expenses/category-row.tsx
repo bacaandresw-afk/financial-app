@@ -48,7 +48,7 @@ export function CategoryRow({
             type="submit"
             disabled={updatePending}
             aria-label={t.common.save}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-success hover:bg-accent shrink-0"
+            className="h-9 w-9 inline-flex items-center justify-center rounded-full text-success hover:bg-accent shrink-0"
           >
             <Check className="h-4 w-4" />
           </button>
@@ -56,7 +56,7 @@ export function CategoryRow({
             type="button"
             onClick={() => setEditing(false)}
             aria-label={t.common.cancel}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:bg-accent shrink-0"
+            className="h-9 w-9 inline-flex items-center justify-center rounded-full text-muted-foreground hover:bg-accent shrink-0"
           >
             <X className="h-4 w-4" />
           </button>
@@ -79,7 +79,7 @@ export function CategoryRow({
             type="button"
             onClick={() => setEditing(true)}
             aria-label={t.expenses.categoryRow.renameCategory}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent shrink-0"
+            className="h-9 w-9 inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-accent shrink-0"
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -96,7 +96,7 @@ export function CategoryRow({
               type="submit"
               disabled={deletePending}
               aria-label={t.expenses.categoryRow.deleteCategory}
-              className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-accent shrink-0"
+              className="h-9 w-9 inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-destructive hover:bg-accent shrink-0"
             >
               <Trash2 className="h-4 w-4" />
             </button>

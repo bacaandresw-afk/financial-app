@@ -5,6 +5,7 @@ import { ReceiptThumbnail } from "./receipt-thumbnail";
 import { DeleteExpenseButton } from "./delete-expense-button";
 import { getLanguage } from "@/lib/i18n/language";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { CategoryIcon, getCategoryColor } from "@/components/ui/category-icon";
 
 export type ExpenseRowData = {
   id: string;
@@ -21,11 +22,7 @@ export async function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
 
   return (
     <div className="flex items-center gap-3 py-3 px-4 border-b border-border last:border-b-0">
-      <div
-        className="h-2 w-2 rounded-full shrink-0"
-        style={{ backgroundColor: expense.category.color ?? "hsl(var(--muted-foreground))" }}
-        aria-hidden
-      />
+      <CategoryIcon name={expense.category.name} color={getCategoryColor(expense.category)} />
 
       {expense.receipt ? (
         <ReceiptThumbnail storagePath={expense.receipt.storagePath} />
@@ -43,13 +40,15 @@ export async function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
         )}
       </div>
 
-      <p className="font-semibold shrink-0">{formatCurrency(expense.amount, expense.currency)}</p>
+      <p className="font-semibold shrink-0 text-destructive">
+        -{formatCurrency(expense.amount, expense.currency)}
+      </p>
 
       <div className="flex items-center gap-1 shrink-0">
         <Link
           href={`/expenses/${expense.id}/edit`}
           aria-label={t.expenses.row.editExpense}
-          className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          className="h-9 w-9 inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
         >
           <Pencil className="h-4 w-4" />
         </Link>

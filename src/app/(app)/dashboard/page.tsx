@@ -128,7 +128,7 @@ export default async function DashboardPage({
       <PeriodSelector period={period} from={fromParam} to={toParam} />
 
       {!hasAnyData ? (
-        <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
           {t.dashboard.noDataForPeriod(currency)}
         </div>
       ) : null}

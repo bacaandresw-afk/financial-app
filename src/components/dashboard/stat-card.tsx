@@ -16,7 +16,9 @@ export function StatCard({
     <Card>
       <CardContent className="space-y-1">
         <p className="text-sm text-muted-foreground">{label}</p>
-        <p className={cn("text-2xl font-semibold tabular-nums", valueClassName)}>{value}</p>
+        <p className={cn("text-xl sm:text-2xl lg:text-3xl font-bold tabular-nums truncate", valueClassName)}>
+          {value}
+        </p>
         {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
       </CardContent>
     </Card>

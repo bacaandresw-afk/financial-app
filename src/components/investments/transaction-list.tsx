@@ -83,7 +83,7 @@ function TransactionRowItem({
       notes: transaction.notes,
     };
     return (
-      <div className="rounded-lg border border-border p-4 bg-muted/40">
+      <div className="rounded-2xl border border-border p-4 bg-muted/40">
         <TransactionForm
           assetId={assetId}
           currency={currency}
@@ -96,7 +96,7 @@ function TransactionRowItem({
   }
 
   return (
-    <div className="rounded-lg border border-border p-3">
+    <div className="rounded-2xl border border-border p-3">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <span

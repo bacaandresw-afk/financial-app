@@ -25,7 +25,7 @@ export function DeleteExpenseButton({ id }: { id: string }) {
         type="submit"
         disabled={pending}
         aria-label={t.expenses.deleteButton.ariaLabel}
-        className="h-9 w-9 inline-flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-accent transition-colors disabled:opacity-50"
+        className="h-9 w-9 inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-destructive hover:bg-accent transition-colors disabled:opacity-50"
       >
         <Trash2 className="h-4 w-4" />
       </button>

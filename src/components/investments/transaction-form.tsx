@@ -128,7 +128,7 @@ export function TransactionForm({
         </div>
         <div className="space-y-1.5">
           <Label>{t.investments.transactionForm.total}</Label>
-          <div className="h-11 flex items-center px-3 rounded-lg border border-border bg-muted text-sm font-medium">
+          <div className="h-11 flex items-center px-3 rounded-2xl border border-border bg-muted text-sm font-medium">
             {total != null ? formatCurrency(total, currency) : "—"}
           </div>
         </div>

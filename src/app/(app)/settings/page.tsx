@@ -81,7 +81,7 @@ export default async function SettingsPage() {
           <Link key={href} href={href}>
             <Card className="hover:bg-accent transition-colors">
               <CardContent className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center shrink-0">
+                <div className="h-10 w-10 rounded-2xl bg-accent flex items-center justify-center shrink-0">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>

@@ -3,6 +3,7 @@
 import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { formatCurrency } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/language-context";
+import { useChartTheme } from "@/lib/chart-theme";
 import { SUCCESS_COLOR, DESTRUCTIVE_COLOR } from "./colors";
 
 export function MonthlyCashFlowChart({
@@ -13,14 +14,24 @@ export function MonthlyCashFlowChart({
   currency: string;
 }) {
   const { t } = useTranslation();
+  const chartTheme = useChartTheme();
 
   return (
     <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} width={56} />
-        <Tooltip formatter={(value: number) => formatCurrency(value, currency)} />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartTheme.grid} />
+        <XAxis dataKey="label" tick={{ fontSize: 11, fill: chartTheme.axis }} />
+        <YAxis tick={{ fontSize: 11, fill: chartTheme.axis }} width={56} />
+        <Tooltip
+          formatter={(value: number) => formatCurrency(value, currency)}
+          contentStyle={{
+            backgroundColor: chartTheme.tooltipBg,
+            border: `1px solid ${chartTheme.tooltipBorder}`,
+            borderRadius: 12,
+            color: chartTheme.tooltipText,
+          }}
+          labelStyle={{ color: chartTheme.tooltipText }}
+        />
         <Bar dataKey="net" name={t.dashboard.monthlyCashFlowChart.net} radius={[4, 4, 0, 0]}>
           {data.map((d, i) => (
             <Cell key={i} fill={d.net >= 0 ? SUCCESS_COLOR : DESTRUCTIVE_COLOR} />
