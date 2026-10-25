@@ -35,3 +35,14 @@ export function formatDate(date: Date | string): string {
 export function todayDateInputValue(): string {
   return new Date().toISOString().slice(0, 10);
 }
+
+/** Whole-number currency for tight spaces (chart labels), e.g. "$118.000". */
+export function formatCurrencyCompact(amount: number, currency: string): string {
+  return new Intl.NumberFormat(CURRENCY_LOCALE[currency] ?? "en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  })
+    .format(amount)
+    .replace(/\s/g, "");
+}

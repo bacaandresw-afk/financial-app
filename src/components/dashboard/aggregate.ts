@@ -23,19 +23,20 @@ export function aggregateByCategory<T extends { amount: number; category: { name
     .sort((a, b) => b.value - a.value);
 }
 
-export type ParetoPoint = { name: string; value: number; cumulativePct: number };
+export type PieSlice = NamedTotal & { percent: number; isOther: boolean };
 
 /**
- * Turns a (descending-sorted, e.g. `aggregateByCategory`'s output) NamedTotal[]
- * into a Pareto series carrying the running cumulative percentage of the total.
+ * Keeps the `topN` largest categories and folds the rest into a single
+ * "other" slice. Expects descending-sorted input (`aggregateByCategory`).
  */
-export function toParetoSeries(data: NamedTotal[]): ParetoPoint[] {
+export function toPieSlices(data: NamedTotal[], topN: number, otherLabel: string): PieSlice[] {
   const total = data.reduce((sum, d) => sum + d.value, 0);
-  let running = 0;
-  return data.map((d) => {
-    running += d.value;
-    return { name: d.name, value: d.value, cumulativePct: total > 0 ? (running / total) * 100 : 0 };
-  });
+  const pct = (v: number) => (total > 0 ? (v / total) * 100 : 0);
+  const top = data.slice(0, topN).map((d) => ({ ...d, percent: pct(d.value), isOther: false }));
+  const rest = data.slice(topN);
+  if (rest.length === 0) return top;
+  const otherValue = rest.reduce((sum, d) => sum + d.value, 0);
+  return [...top, { name: otherLabel, value: otherValue, percent: pct(otherValue), isOther: true }];
 }
 
 /** True when the range crosses at least one calendar-month boundary. */

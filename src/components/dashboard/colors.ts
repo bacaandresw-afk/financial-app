@@ -22,3 +22,6 @@ export const CHART_PALETTE = [
 export function paletteColor(index: number): string {
   return CHART_PALETTE[index % CHART_PALETTE.length];
 }
+
+// Neutral slice for the "other categories" bucket of category pies.
+export const OTHER_COLOR = "hsl(0, 0%, 50%)";

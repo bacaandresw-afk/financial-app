@@ -23,10 +23,16 @@ export const dashboard = {
     selectLongerPeriodCashFlow: "Select a period spanning 2 or more months to see monthly cash flow.",
     selectLongerPeriodSpending: "Select a period spanning 2 or more months to see the spending trend.",
   },
-  pareto: {
-    amount: "Amount",
-    cumulativeShare: "Cumulative %",
-    threshold: "80% threshold",
+  pie: {
+    otherCategories: "Other categories",
+  },
+  usdIncome: {
+    toggleLabel: "Include dollar income",
+    rateNote: (rate: string, source: string, date: string) =>
+      `USD income converted at ${rate} per USD (Dólar MEP, ${source}, ${date}).`,
+    rateUnavailable: "Couldn't fetch the dollar rate right now, so dollar income is not included.",
+    arsEquivalent: (amount: string) => `≈ ${amount} ARS`,
+    arsEquivalentRate: (rate: string) => `ARS equivalent at ${rate} per USD (Dólar MEP)`,
   },
   cashFlowChart: {
     income: "Income",
