@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { getPeriodRange } from "@/lib/date-range";
 import { periodSchema, CURRENCIES, type Period } from "@/lib/validations";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import { getUsdRate } from "@/lib/exchange-rate";
 import { getLanguage } from "@/lib/i18n/language";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { PeriodSelector } from "@/components/dashboard/period-selector";
@@ -12,7 +13,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { ChartCard } from "@/components/dashboard/chart-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { CategoryPieChart } from "@/components/dashboard/category-pie-chart";
-import { ExpensesParetoChart } from "@/components/dashboard/expenses-pareto-chart";
+import { IncludeUsdToggle } from "@/components/dashboard/include-usd-toggle";
 import { CashFlowOverTimeChart } from "@/components/dashboard/cash-flow-over-time-chart";
 import { MonthlyCashFlowChart } from "@/components/dashboard/monthly-cash-flow-chart";
 import { MonthlySpendingTrendChart } from "@/components/dashboard/monthly-spending-trend-chart";
@@ -31,6 +32,7 @@ type SearchParams = {
   to?: string;
   currency?: string;
   granularity?: string;
+  includeUsd?: string;
 };
 
 function first(value: string | string[] | undefined): string | undefined {
@@ -69,8 +71,14 @@ export default async function DashboardPage({
   const { from, to } = getPeriodRange(period, { from: fromParam, to: toParam });
 
   const currency = await resolveCurrency(user.id, first(sp.currency));
+  const includeUsdRequested = currency === "ARS" && first(sp.includeUsd) === "1";
 
-  const [expenseRows, incomeRows] = await Promise.all([
+  // The dollar rate is needed both to fold USD income into the ARS view and
+  // to show the ARS equivalent of income on the USD view.
+  const usdRate = includeUsdRequested || currency === "USD" ? await getUsdRate() : null;
+  const includeUsd = includeUsdRequested && usdRate !== null;
+
+  const [expenseRows, incomeRows, usdIncomeRows] = await Promise.all([
     prisma.expense.findMany({
       where: { userId: user.id, currency, date: { gte: from, lte: to } },
       include: { category: true },
@@ -81,6 +89,13 @@ export default async function DashboardPage({
       include: { category: true },
       orderBy: { date: "asc" },
     }),
+    includeUsd
+      ? prisma.income.findMany({
+          where: { userId: user.id, currency: "USD", date: { gte: from, lte: to } },
+          include: { category: true },
+          orderBy: { date: "asc" },
+        })
+      : Promise.resolve([]),
   ]);
 
   const expenses = expenseRows.map((e) => ({
@@ -88,11 +103,19 @@ export default async function DashboardPage({
     date: e.date,
     category: { name: e.category.name },
   }));
-  const incomes = incomeRows.map((i) => ({
-    amount: Number(i.amount),
-    date: i.date,
-    category: { name: i.category.name },
-  }));
+  const incomes = [
+    ...incomeRows.map((i) => ({
+      amount: Number(i.amount),
+      date: i.date,
+      category: { name: i.category.name },
+    })),
+    // USD income converted to ARS at the current rate.
+    ...usdIncomeRows.map((i) => ({
+      amount: Number(i.amount) * (usdRate?.rate ?? 0),
+      date: i.date,
+      category: { name: i.category.name },
+    })),
+  ];
 
   const totalIncome = incomes.reduce((sum, i) => sum + i.amount, 0);
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -116,6 +139,9 @@ export default async function DashboardPage({
   const granularity = parseCashFlowGranularity(first(sp.granularity));
   const cashFlowOverTimeBuckets = bucketCashFlow(expenses, incomes, from, to, granularity);
 
+  const arsFormatter = new Intl.NumberFormat("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const rateText = usdRate ? arsFormatter.format(usdRate.rate) : "";
+
   const hasAnyData = expenses.length > 0 || incomes.length > 0;
 
   return (
@@ -124,6 +150,19 @@ export default async function DashboardPage({
         <h1 className="text-2xl font-semibold">{t.dashboard.title}</h1>
         <CurrencyToggle currency={currency} />
       </div>
+
+      {currency === "ARS" ? (
+        <div className="space-y-1">
+          <IncludeUsdToggle checked={includeUsdRequested} />
+          {includeUsdRequested ? (
+            <p className="text-xs text-muted-foreground">
+              {usdRate
+                ? t.dashboard.usdIncome.rateNote(rateText, usdRate.source, formatDate(usdRate.fetchedAt))
+                : t.dashboard.usdIncome.rateUnavailable}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       <PeriodSelector period={period} from={fromParam} to={toParam} />
 
@@ -138,6 +177,11 @@ export default async function DashboardPage({
           label={t.dashboard.stats.totalIncome}
           value={formatCurrency(totalIncome, currency)}
           valueClassName="text-success"
+          hint={
+            currency === "USD" && usdRate
+              ? t.dashboard.usdIncome.arsEquivalent(formatCurrency(totalIncome * usdRate.rate, "ARS"))
+              : undefined
+          }
         />
         <StatCard
           label={t.dashboard.stats.totalExpenses}
@@ -156,7 +200,7 @@ export default async function DashboardPage({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <ChartCard title={t.dashboard.charts.expensesByCategory}>
           {expensesByCategory.length > 0 ? (
-            <ExpensesParetoChart data={expensesByCategory} currency={currency} />
+            <CategoryPieChart data={expensesByCategory} currency={currency} />
           ) : (
             <EmptyState message={t.dashboard.empty.noExpensesForPeriod(currency)} />
           )}

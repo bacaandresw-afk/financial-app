@@ -23,10 +23,16 @@ export const dashboard = {
     selectLongerPeriodCashFlow: "Elegí un período de 2 meses o más para ver el flujo de caja mensual.",
     selectLongerPeriodSpending: "Elegí un período de 2 meses o más para ver la tendencia de gasto.",
   },
-  pareto: {
-    amount: "Monto",
-    cumulativeShare: "% acumulado",
-    threshold: "Umbral del 80%",
+  pie: {
+    otherCategories: "Otras categorías",
+  },
+  usdIncome: {
+    toggleLabel: "Incluir ingresos en dólares",
+    rateNote: (rate: string, source: string, date: string) =>
+      `Ingresos en USD convertidos a ${rate} por USD (Dólar MEP, ${source}, ${date}).`,
+    rateUnavailable: "No se pudo obtener la cotización del dólar en este momento, por lo que no se incluyen los ingresos en dólares.",
+    arsEquivalent: (amount: string) => `≈ ${amount} ARS`,
+    arsEquivalentRate: (rate: string) => `Equivalente en ARS a ${rate} por USD (Dólar MEP)`,
   },
   cashFlowChart: {
     income: "Ingresos",
